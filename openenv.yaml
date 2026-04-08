@@ -1,0 +1,15 @@
+name: blood_env
+version: "1.0.0"
+description: "AI-driven blood supply chain and emergency routing environment."
+type: "logistics"
+tags: ["openenv", "healthcare", "supply-chain"]
+tasks:
+  - id: "easy_routing"
+    difficulty: "easy"
+    description: "Move blood to a single emergency node."
+  - id: "emergency_response"
+    difficulty: "medium"
+    description: "Manage multiple emergencies with short-lived stock."
+  - id: "hard_optimization"
+    difficulty: "hard"
+    description: "Optimize a full network under high pressure."
