@@ -1,9 +1,3 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
-# All rights reserved.
-#
-# This source code is licensed under the BSD-style license found in the
-# LICENSE file in the root directory of this source tree.
-
 """Blood Env Environment Client."""
 
 from typing import Dict
@@ -20,11 +14,9 @@ class BloodEnv(
 ):
     """
     Client for the Blood Env Environment.
-
     This client maintains a persistent WebSocket connection to the environment server,
     enabling efficient multi-step interactions with lower latency.
     Each client instance has its own dedicated environment session on the server.
-
     Example:
         >>> # Connect to a running server
         >>> with BloodEnv(base_url="http://localhost:8000") as client:
@@ -33,7 +25,6 @@ class BloodEnv(
         ...
         ...     result = client.step(BloodAction(message="Hello!"))
         ...     print(result.observation.echoed_message)
-
     Example with Docker:
         >>> # Automatically start container and connect
         >>> client = BloodEnv.from_docker_image("blood_env-env:latest")
@@ -47,10 +38,8 @@ class BloodEnv(
     def _step_payload(self, action: BloodAction) -> Dict:
         """
         Convert BloodAction to JSON payload for step message.
-
         Args:
             action: BloodAction instance
-
         Returns:
             Dictionary representation suitable for JSON encoding
         """
@@ -61,10 +50,8 @@ class BloodEnv(
     def _parse_result(self, payload: Dict) -> StepResult[BloodObservation]:
         """
         Parse server response into StepResult[BloodObservation].
-
         Args:
             payload: JSON response data from server
-
         Returns:
             StepResult with BloodObservation
         """
@@ -86,10 +73,8 @@ class BloodEnv(
     def _parse_state(self, payload: Dict) -> State:
         """
         Parse server response into State object.
-
         Args:
             payload: JSON response from state request
-
         Returns:
             State object with episode_id and step_count
         """
