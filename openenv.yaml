@@ -1,15 +1,43 @@
 name: blood_env
 version: "1.0.0"
-description: "AI-driven blood supply chain and emergency routing environment."
+description: "AI-driven emergency blood logistics — route perishable blood units across hospitals to save lives, respecting blood type compatibility and expiry constraints."
 type: "logistics"
-tags: ["openenv", "healthcare", "supply-chain"]
+tags: ["openenv", "healthcare", "supply-chain", "blood-bank", "emergency-response"]
+
+base_url: "https://huggingface.co/spaces/JasimShaikh/Blood_env"   # <-- update to your actual HF Space URL
+
 tasks:
   - id: "easy_routing"
     difficulty: "easy"
-    description: "Move blood to a single emergency node."
+    description: "Move O+ blood from surplus nodes to a single emergency node. Well-stocked inventory, long expiry."
+    max_steps: 30
+    success_threshold: 0.1
+
   - id: "emergency_response"
     difficulty: "medium"
-    description: "Manage multiple emergencies with short-lived stock."
+    description: "Manage multiple simultaneous emergencies with mixed blood types, moderate inventory, and shorter expiry windows. Agent must understand blood type compatibility."
+    max_steps: 30
+    success_threshold: 0.1
+
   - id: "hard_optimization"
     difficulty: "hard"
-    description: "Optimize a full network under high pressure."
+    description: "Scarce inventory, near-expiry blood, rare blood types (O-, AB-), critical-urgency emergencies at all nodes simultaneously. Requires optimal routing and prioritization."
+    max_steps: 30
+    success_threshold: 0.1
+
+observation_space:
+  node_inventories: "Dict[int, List[BloodUnit]] — blood units at each hospital with type and expiry days"
+  active_emergencies: "Dict[int, List[Emergency]] — active demand at each node with blood type, units needed, urgency"
+  current_step: "int — current step in episode"
+  lives_saved: "int — cumulative lives saved this episode"
+  lives_lost: "int — cumulative lives lost this episode"
+  units_expired: "int — cumulative expired units this episode"
+
+action_space:
+  routes: "List[RouteDirective] — list of blood transfers, each with source_node, target_node, blood_type, units"
+
+reward_shaping:
+  life_saved: "+100 × urgency per emergency fulfilled"
+  life_lost: "-50 × (unfulfilled units) × urgency"
+  expired_unit: "-20 per unit expired"
+  valid_transfer: "+5 per unit successfully moved"
